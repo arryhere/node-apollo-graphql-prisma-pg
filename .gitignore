@@ -1,0 +1,14 @@
+
+# .gitignore
+
+/node_modules
+/tmp
+/dist
+/debug
+/log
+
+.env*
+!.env.sample
+.DS_Store
+*.pdf
+*.pem
