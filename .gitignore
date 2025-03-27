@@ -6,6 +6,7 @@
 /dist
 /debug
 /log*
+/prisma/generated/
 
 .env*
 !.env.sample

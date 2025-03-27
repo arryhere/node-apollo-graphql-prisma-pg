@@ -14,3 +14,5 @@
 # Prisma Commands
 
 - `npx prisma init --datasource-provider postgresql --output ../generated/prisma`
+- `npx prisma generate`
+- `npx prisma migrate dev --name <migration_name>`
