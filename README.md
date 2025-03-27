@@ -8,3 +8,7 @@
 - `npm run start:dev`
 
 ---
+
+# Prisma Commands
+
+- `npx prisma init --datasource-provider postgresql --output ../generated/prisma`

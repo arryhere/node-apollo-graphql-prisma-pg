@@ -5,7 +5,7 @@
 /tmp
 /dist
 /debug
-/log
+/log*
 
 .env*
 !.env.sample
