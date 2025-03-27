@@ -2,8 +2,8 @@ name: compose-db-node-express-graphql-pg
 
 services:
   db:
-    # pg out container uri     : postgresql://postgres:postgres@localhost:5432/mydb?schema=public
-    # pg in container uri      : postgresql://postgres:postgres@db:5432/mydb?schema=public
+    # pg out container uri     : postgresql://postgres:postgres@localhost:5432/my_db?schema=public
+    # pg in container uri      : postgresql://postgres:postgres@db:5432/my_db?schema=public
     container_name: postgres-db-container
     image: postgres:latest
     restart: on-failure:3
