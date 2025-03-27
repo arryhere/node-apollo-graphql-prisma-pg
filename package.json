@@ -7,8 +7,8 @@
   "author": "Arijit Das <https://github.com/arryhere>",
   "description": "",
   "scripts": {
-    "dev": "tsx watch --include ./src ./src/main.ts",
     "clean": "rm -rf ./dist",
+    "start:dev": "tsx watch --include ./src ./src/main.ts",
     "format": "biome format --write ./src",
     "lint": "biome lint --write ./src && biome check --write ./src",
     "type-check": "tsc --noEmit",
