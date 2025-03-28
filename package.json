@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "clean:dep": "rm -rf node_modules package-lock.json",
-    "start:dev": "tsx watch --include './src/**/*.ts' --env-file=./.env ./src/main.ts",
+    "start:dev": "tsx watch --include './src/**/*.{ts,js}' --env-file=./.env ./src/main.ts",
     "format": "biome format --write ./src",
     "lint": "biome lint --write ./src && biome check --write ./src",
     "type-check": "tsc --noEmit",
