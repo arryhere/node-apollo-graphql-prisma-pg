@@ -33,6 +33,9 @@
       "quoteProperties": "asNeeded",
       "trailingCommas": "es5",
       "semicolons": "always"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "json": {

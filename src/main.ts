@@ -32,7 +32,7 @@ async function main() {
     /* api */
     app.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('root'));
     app.use('/rest', rest_router);
-    app.use('/graphql', expressMiddleware(apollo_server, { context: async () => ({ mode: 'graphql' }) }));
+    app.use('/graphql', expressMiddleware(apollo_server, { context: async () => ({ api: 'graphql' }) }));
     app.use((req: Request, res: Response, next: NextFunction) => res.status(404).send('Page Not Found'));
 
     /* start */
