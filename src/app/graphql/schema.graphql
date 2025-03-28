@@ -3,8 +3,18 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type GraphQLBaseResponse {
+  environment: String!
+  message: String!
+  success: Boolean!
+}
+
 type HealthOutput {
   status: String!
+}
+
+type Mutation {
+  signUp: GraphQLBaseResponse!
 }
 
 type Query {

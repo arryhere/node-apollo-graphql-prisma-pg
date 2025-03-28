@@ -7,8 +7,8 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import cors from 'cors';
 import express from 'express';
 import type { NextFunction, Request, Response } from 'express';
-import { typegraphql_schema } from './app/graphql/typegraphql_schema.js';
-import { rest_router } from './app/rest/routes/route.js';
+import { typegraphqlSchema } from './app/graphql/typegraphqlSchema.js';
+import { restRouter } from './app/rest/routes/route.js';
 import { config } from './config/config.js';
 
 async function main() {
@@ -18,11 +18,11 @@ async function main() {
     const http_server = http.createServer(app);
 
     /* apollo server */
-    const apollo_server = new ApolloServer({
-      schema: typegraphql_schema,
+    const apolloServer = new ApolloServer({
+      schema: typegraphqlSchema,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: http_server })],
     });
-    await apollo_server.start();
+    await apolloServer.start();
 
     /* middlewares */
     app.use(cors());
@@ -31,8 +31,8 @@ async function main() {
 
     /* api */
     app.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('root'));
-    app.use('/rest', rest_router);
-    app.use('/graphql', expressMiddleware(apollo_server, { context: async () => ({ api: 'graphql' }) }));
+    app.use('/rest', restRouter);
+    app.use('/graphql', expressMiddleware(apolloServer, { context: async () => ({ api: 'graphql' }) }));
     app.use((req: Request, res: Response, next: NextFunction) => res.status(404).send('Page Not Found'));
 
     /* start */
