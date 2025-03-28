@@ -1,5 +1,5 @@
 import { buildSchema } from 'type-graphql';
-import { Container } from 'typedi'; // ✅ Correct import
+import { Container } from 'typedi';
 import { HealthResolver } from './health/health.resolver.js';
 
 export const typegraphql_schema = await buildSchema({

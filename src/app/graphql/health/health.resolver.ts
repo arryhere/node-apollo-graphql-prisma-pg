@@ -6,11 +6,14 @@ import { HealthService } from './health.service.js';
 @Resolver()
 @Service()
 export class HealthResolver {
-  constructor(@Inject(() => HealthService) private readonly healthService: HealthService) {} 
+  constructor( private readonly healthService: any) {} 
 
   @Query(() => HealthOutput)
   async health(): Promise<HealthOutput> {
     console.log('health');
+    // const h = new HealthService()
+    // return await  h.health()
+    console.log('healthService', this.healthService);
     return await this.healthService.health();
   }
 }
