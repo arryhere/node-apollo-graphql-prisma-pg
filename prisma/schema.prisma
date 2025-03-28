@@ -6,12 +6,24 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = "native"
+  binaryTargets = ["native", "darwin-arm64", "darwin", "windows", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_DATABASE_URL")
+}
+
+enum TokenType {
+  VERIFY_TOKEN
+  FORGET_PASSWORD_TOKEN
+  TWO_FA_TOKEN
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
 }
 
 model User {
@@ -22,6 +34,7 @@ model User {
   dob              String
   phoneNumber      String
   passwordHash     String
+  role             Role      @default(USER)
   verified         Boolean   @default(false)
   active           Boolean   @default(true)
   twoFA            Boolean   @default(false)
@@ -29,6 +42,20 @@ model User {
   accountLockedAt  DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  Token            Token[]
 
   @@map("user")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String
+  tokenType TokenType
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, token])
+  @@map("token")
 }
