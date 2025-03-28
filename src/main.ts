@@ -6,7 +6,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 import express from 'express';
-import { typegraphql_schema } from './app/graphql/resolvers.js';
+import { typegraphql_schema } from './app/graphql/typegraphql_schema.js';
 import { config } from './config/config.js';
 
 async function main() {
