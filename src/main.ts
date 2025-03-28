@@ -1,4 +1,4 @@
-// import 'core-js/features/reflect';
+// import 'core-js/features/reflect'; // use this or reflect-metadata
 import 'reflect-metadata';
 import http from 'node:http';
 import { ApolloServer } from '@apollo/server';
