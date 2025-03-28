@@ -1,9 +1,12 @@
+// import 'core-js/features/reflect';
+import 'reflect-metadata';
 import http from 'node:http';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 import express from 'express';
+import { typegraphql_schema } from './app/graphql/resolvers.js';
 import { config } from './config/config.js';
 
 async function main() {
@@ -13,8 +16,7 @@ async function main() {
     const http_server = http.createServer(app);
 
     const apollo_server = new ApolloServer({
-      typeDefs: '',
-      resolvers: {},
+      schema: typegraphql_schema,
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer: http_server })],
     });
 
