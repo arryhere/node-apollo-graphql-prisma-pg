@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { HealthOutput } from './dto/health.output.js';
+import type { HealthOutput } from './dto/health.output.js';
 
 @Service()
 export class HealthService {
