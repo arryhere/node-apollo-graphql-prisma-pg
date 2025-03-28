@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "clean:dep": "rm -rf node_modules package-lock.json",
-    "start:dev": "tsx watch --include ./src --exclude './src/**/*.graphql' ./src/main.ts",
+    "start:dev": "tsx watch --include './src/**/*.ts' --env-file=./.env ./src/main.ts",
     "format": "biome format --write ./src",
     "lint": "biome lint --write ./src && biome check --write ./src",
     "type-check": "tsc --noEmit",
@@ -21,7 +21,6 @@
     "class-validator": "^0.14.1",
     "core-js": "^3.41.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "graphql": "^16.10.0",
     "graphql-config": "^5.1.3",

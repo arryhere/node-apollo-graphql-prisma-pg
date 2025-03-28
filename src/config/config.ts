@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 export const config = {
   app: {
     APP_ENV: process.env.APP_ENV,
