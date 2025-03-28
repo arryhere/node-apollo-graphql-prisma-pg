@@ -14,9 +14,18 @@ type HealthOutput {
 }
 
 type Mutation {
-  signUp: GraphQLBaseResponse!
+  signUp(signUpInput: SignUpInput!): GraphQLBaseResponse!
 }
 
 type Query {
   health: HealthOutput!
+}
+
+input SignUpInput {
+  dob: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  phoneNumber: String!
 }

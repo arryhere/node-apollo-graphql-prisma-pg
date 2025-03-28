@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from 'class-validator';
-import { ArgsType, Field } from 'type-graphql';
+import { Field, InputType } from 'type-graphql';
 
-@ArgsType()
+@InputType()
 export class SignUpInput {
   @IsNotEmpty()
   @IsString()
