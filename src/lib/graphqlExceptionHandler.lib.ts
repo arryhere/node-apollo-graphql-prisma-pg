@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql';
 
-export function exceptionHandler(error: GraphQLError | unknown, message: string): never {
+/* use in catch block in graphql only */
+export function graphqlExceptionHandler(error: GraphQLError | unknown, message: string): never {
   if (error instanceof GraphQLError) {
     throw new GraphQLError(error.message);
   }

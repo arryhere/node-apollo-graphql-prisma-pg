@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { config } from '../../../config/config.js';
 import { EmailService } from '../../../lib/emailService.lib.js';
-import { exceptionHandler } from '../../../lib/exceptionHandler.lib.js';
+import { graphqlExceptionHandler } from '../../../lib/graphqlExceptionHandler.lib.js';
 import { prisma } from '../../../lib/prisma.lib.js';
 import type { GraphQLBaseResponse } from '../common/dto/graphqlBase.response.js';
 import type { SignUpInput } from './dto/signUp.input.js';
@@ -58,7 +58,7 @@ export class AuthService {
         message: 'User created successfully, please check your email to verify your account',
       };
     } catch (error) {
-      exceptionHandler(error, 'Error: AuthService > signUp');
+      graphqlExceptionHandler(error, 'Error: AuthService > signUp');
     }
   }
 
@@ -106,7 +106,7 @@ export class AuthService {
         message: 'User verification link sent successfully',
       };
     } catch (error) {
-      exceptionHandler(error, 'Error: AuthService > verifyLink');
+      graphqlExceptionHandler(error, 'Error: AuthService > verifyLink');
     }
   }
 
@@ -167,7 +167,7 @@ export class AuthService {
         message: 'User verified successfully',
       };
     } catch (error) {
-      exceptionHandler(error, 'Error: AuthService > verify');
+      graphqlExceptionHandler(error, 'Error: AuthService > verify');
     }
   }
 }
