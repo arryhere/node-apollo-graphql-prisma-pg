@@ -1,9 +1,8 @@
 import { Field, ObjectType } from 'type-graphql';
-import { config } from '../../../../config/config.js';
 
 @ObjectType()
 export class GraphQLBaseResponse {
-  @Field(() => String, { nullable: false, defaultValue: config.app.APP_ENV })
+  @Field(() => String, { nullable: false })
   environment!: string;
 
   @Field(() => Boolean, { nullable: false })
