@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { buildSchema } from 'type-graphql';
-import { HealthResolver } from './health/health.resolver.js';
 import { AuthResolver } from './auth/auth.resolver.js';
+import { HealthResolver } from './health/health.resolver.js';
 
 export const typegraphqlSchema = await buildSchema({
   resolvers: [HealthResolver, AuthResolver],

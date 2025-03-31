@@ -15,10 +15,12 @@ type HealthOutput {
 
 type Mutation {
   signUp(signUpInput: SignUpInput!): GraphQLBaseResponse!
+  verify(verifyInput: VerifyInput!): GraphQLBaseResponse!
 }
 
 type Query {
   health: HealthOutput!
+  verifyLink(email: String!, password: String!): GraphQLBaseResponse!
 }
 
 input SignUpInput {
@@ -28,4 +30,8 @@ input SignUpInput {
   lastName: String!
   password: String!
   phoneNumber: String!
+}
+
+input VerifyInput {
+  token: String!
 }

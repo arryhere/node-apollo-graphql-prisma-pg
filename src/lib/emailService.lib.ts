@@ -12,7 +12,7 @@ export class EmailService {
       });
 
       const res = await mail_transport.sendMail({
-        from: config.email.EMAIL_FROM,
+        from: `DoNotReply <${config.email.EMAIL_FROM}>`,
         to: toEmail,
         replyTo: config.email.EMAIL_FROM,
         subject: subject,
