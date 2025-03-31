@@ -8,6 +8,7 @@ import { EmailService } from '../../../lib/emailService.lib.js';
 import { graphqlExceptionHandler } from '../../../lib/graphqlExceptionHandler.lib.js';
 import { prisma } from '../../../lib/prisma.lib.js';
 import type { GraphQLBaseResponse } from '../common/dto/graphqlBase.response.js';
+import type { SignInInput } from './dto/signIn.input.js';
 import type { SignUpInput } from './dto/signUp.input.js';
 import type { VerifyInput } from './dto/verify.input.js';
 import type { VerifyLinkInput } from './dto/verifyLink.input.js';
@@ -72,9 +73,9 @@ export class AuthService {
         throw new GraphQLError('User not found');
       }
 
-      const passwordMatch = await bcrypt.compare(verifyLinkInput.password, existingUser.passwordHash);
+      const passwordCompare = await bcrypt.compare(verifyLinkInput.password, existingUser.passwordHash);
 
-      if (!passwordMatch) {
+      if (!passwordCompare) {
         throw new GraphQLError('Invalid Credentials');
       }
 
@@ -168,6 +169,65 @@ export class AuthService {
       };
     } catch (error) {
       graphqlExceptionHandler(error, 'Error: AuthService > verify');
+    }
+  }
+
+  async signIn(signInInput: SignInInput) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email: signInInput.email },
+      });
+
+      if (!user) {
+        throw new GraphQLError('User not found');
+      }
+
+      if (!user.active) {
+        throw new GraphQLError('User not active, contact support');
+      }
+
+      if (!user.verified) {
+        try {
+          const verifyToken = jwt.sign({ email: signInInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
+            expiresIn: '10m',
+          });
+
+          await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
+
+          return {
+            success: false,
+            message: 'User not verified, verification link sent',
+            proceedToMFA: false,
+            redirectToSignIn: false,
+            accessToken: '',
+            refreshToken: '',
+          };
+        } catch {
+          throw new GraphQLError('User not verified, failed to send verification link');
+        }
+      }
+
+      const passwordCompare = await bcrypt.compare(signInInput.password, user.passwordHash);
+
+      if (!passwordCompare) {
+        throw new GraphQLError('Invalid Credentials');
+      }
+
+      const accessToken = jwt.sign({ id: user.id }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
+        expiresIn: '1h',
+      });
+      const refreshToken = jwt.sign({ id: user.id }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
+        expiresIn: '7d',
+      });
+
+      return {
+        success: true,
+        message: 'SignIn success',
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      graphqlExceptionHandler(error, 'Error: AuthService > signIn');
     }
   }
 }
