@@ -38,7 +38,6 @@ async function main() {
     /* start */
     await new Promise<void>((resolve) => http_server.listen({ port: port }, resolve));
 
-    console.log(`[root]: http://localhost:${port}/`);
     console.log(`[rest]: http://localhost:${port}/rest/`);
     console.log(`[graphql]: http://localhost:${port}/graphql/`);
   } catch (error) {
