@@ -1,5 +1,5 @@
 {
-  "name": "node-express-graphql-pg",
+  "name": "node-apollo-graphql-prisma-pg",
   "version": "1.0.0",
   "type": "module",
   "license": "UNLICENSED",
