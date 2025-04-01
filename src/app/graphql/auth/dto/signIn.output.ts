@@ -4,12 +4,12 @@ import { GraphQLBaseResponse } from '../../common/dto/graphqlBase.response.js';
 
 @ObjectType()
 export class SignInOutput extends GraphQLBaseResponse {
-  @Field(() => Temp, { nullable: false })
-  body!: Temp;
+  @Field(() => Body, { nullable: false })
+  body!: Body;
 }
 
 @ObjectType()
-class Temp {
+class Body {
   @IsNotEmpty()
   @IsString()
   @Field(() => String, { nullable: false })

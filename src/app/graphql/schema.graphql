@@ -3,6 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Body {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type GraphQLBaseResponse {
   environment: String!
   message: String!
@@ -25,7 +30,7 @@ type Query {
 }
 
 type SignInOutput {
-  body: Temp!
+  body: Body!
   environment: String!
   message: String!
   success: Boolean!
@@ -38,11 +43,6 @@ input SignUpInput {
   lastName: String!
   password: String!
   phoneNumber: String!
-}
-
-type Temp {
-  accessToken: String!
-  refreshToken: String!
 }
 
 input VerifyInput {
