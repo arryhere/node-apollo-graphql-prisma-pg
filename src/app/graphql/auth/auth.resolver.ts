@@ -1,6 +1,8 @@
 import { Arg, Args, Mutation, Query, Resolver } from 'type-graphql';
 import { GraphQLBaseResponse } from '../common/dto/graphqlBase.response.js';
 import { AuthService } from './auth.service.js';
+import { SignInInput } from './dto/signIn.input.js';
+import { SignInOutput } from './dto/signIn.output.js';
 import { SignUpInput } from './dto/signUp.input.js';
 import { VerifyInput } from './dto/verify.input.js';
 import { VerifyLinkInput } from './dto/verifyLink.input.js';
@@ -22,5 +24,10 @@ export class AuthResolver {
   @Mutation(() => GraphQLBaseResponse)
   async verify(@Arg('verifyInput', () => VerifyInput) verifyInput: VerifyInput): Promise<GraphQLBaseResponse> {
     return await this.authService.verify(verifyInput);
+  }
+
+  @Query(() => SignInOutput)
+  async signin(@Args(() => SignInInput) signInInput: SignInInput): Promise<SignInOutput> {
+    return await this.authService.signIn(signInInput);
   }
 }

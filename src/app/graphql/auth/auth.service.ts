@@ -9,6 +9,7 @@ import { graphqlExceptionHandler } from '../../../lib/graphqlExceptionHandler.li
 import { prisma } from '../../../lib/prisma.lib.js';
 import type { GraphQLBaseResponse } from '../common/dto/graphqlBase.response.js';
 import type { SignInInput } from './dto/signIn.input.js';
+import type { SignInOutput } from './dto/signIn.output.js';
 import type { SignUpInput } from './dto/signUp.input.js';
 import type { VerifyInput } from './dto/verify.input.js';
 import type { VerifyLinkInput } from './dto/verifyLink.input.js';
@@ -172,7 +173,7 @@ export class AuthService {
     }
   }
 
-  async signIn(signInInput: SignInInput) {
+  async signIn(signInInput: SignInInput): Promise<SignInOutput> {
     try {
       const user = await prisma.user.findUnique({
         where: { email: signInInput.email },
@@ -186,6 +187,21 @@ export class AuthService {
         throw new GraphQLError('User not active, contact support');
       }
 
+      if (user.accountLockedAt) {
+        const accountLockedAtDifference = differenceInMinutes(new Date(), user.accountLockedAt);
+        if (accountLockedAtDifference < 60) {
+          return {
+            environment: config.app.APP_ENV,
+            success: false,
+            message: `User account locked, please try again after ${60 - accountLockedAtDifference}mins`,
+            body: {
+              accessToken: '',
+              refreshToken: '',
+            },
+          };
+        }
+      }
+
       if (!user.verified) {
         try {
           const verifyToken = jwt.sign({ email: signInInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
@@ -195,12 +211,13 @@ export class AuthService {
           await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
 
           return {
+            environment: config.app.APP_ENV,
             success: false,
             message: 'User not verified, verification link sent',
-            proceedToMFA: false,
-            redirectToSignIn: false,
-            accessToken: '',
-            refreshToken: '',
+            body: {
+              accessToken: '',
+              refreshToken: '',
+            },
           };
         } catch {
           throw new GraphQLError('User not verified, failed to send verification link');
@@ -221,10 +238,13 @@ export class AuthService {
       });
 
       return {
+        environment: config.app.APP_ENV,
         success: true,
         message: 'SignIn success',
-        accessToken,
-        refreshToken,
+        body: {
+          accessToken,
+          refreshToken,
+        },
       };
     } catch (error) {
       graphqlExceptionHandler(error, 'Error: AuthService > signIn');

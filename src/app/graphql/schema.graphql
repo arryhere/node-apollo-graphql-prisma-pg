@@ -20,7 +20,15 @@ type Mutation {
 
 type Query {
   health: HealthOutput!
+  signin(email: String!, password: String!): SignInOutput!
   verifyLink(email: String!, password: String!): GraphQLBaseResponse!
+}
+
+type SignInOutput {
+  body: Temp!
+  environment: String!
+  message: String!
+  success: Boolean!
 }
 
 input SignUpInput {
@@ -30,6 +38,11 @@ input SignUpInput {
   lastName: String!
   password: String!
   phoneNumber: String!
+}
+
+type Temp {
+  accessToken: String!
+  refreshToken: String!
 }
 
 input VerifyInput {
