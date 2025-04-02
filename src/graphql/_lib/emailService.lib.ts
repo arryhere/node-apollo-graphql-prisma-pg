@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql';
 import nodemailer from 'nodemailer';
-import { config } from '../config/config.js';
+import { config } from '../../config/config.js';
 
 export class EmailService {
   async sendEmail(subject: string, html: string, toEmail: string): Promise<void> {

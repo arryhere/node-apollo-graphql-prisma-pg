@@ -7,9 +7,9 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import cors from 'cors';
 import express from 'express';
 import type { NextFunction, Request, Response } from 'express';
-import { typegraphqlSchema } from './app/graphql/typegraphqlSchema.js';
-import { restRouter } from './app/rest/routes/route.js';
 import { config } from './config/config.js';
+import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
+import { restRouter } from './rest/routes/route.js';
 
 async function main() {
   try {

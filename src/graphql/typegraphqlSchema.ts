@@ -6,5 +6,5 @@ import { HealthResolver } from './health/health.resolver.js';
 export const typegraphqlSchema = await buildSchema({
   resolvers: [HealthResolver, AuthResolver],
   validate: true,
-  emitSchemaFile: { path: path.join(process.cwd(), 'src', 'app', 'graphql', 'schema.graphql'), sortedSchema: true },
+  emitSchemaFile: { path: path.join(process.cwd(), 'src', 'graphql', 'schema.graphql'), sortedSchema: true },
 });

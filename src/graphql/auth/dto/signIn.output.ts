@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
-import { GraphQLBaseResponse } from '../../../../lib/graphqlBaseResponse.lib.js';
+import { GraphQLBaseResponse } from '../../_lib/graphqlBaseResponse.lib.js';
 
 @ObjectType()
 export class SignInOutput extends GraphQLBaseResponse {

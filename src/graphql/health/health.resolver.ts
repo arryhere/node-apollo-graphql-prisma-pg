@@ -6,6 +6,7 @@ import { HealthService } from './health.service.js';
 export class HealthResolver {
   private readonly healthService: HealthService = new HealthService();
 
+  // @Authorized()
   @Query(() => HealthOutput)
   async health(@Ctx() ctx: unknown): Promise<HealthOutput> {
     return await this.healthService.health();
