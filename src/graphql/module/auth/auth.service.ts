@@ -230,10 +230,10 @@ export class AuthService {
         throw new GraphQLError('Invalid Credentials');
       }
 
-      const accessToken = jwt.sign({ id: user.id }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
+      const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
         expiresIn: '1h',
       });
-      const refreshToken = jwt.sign({ id: user.id }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
+      const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
         expiresIn: '7d',
       });
 

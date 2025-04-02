@@ -1,22 +1,17 @@
-import { IsNotEmpty, IsString } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
 import { GraphQLBaseResponse } from '../../../lib/graphqlBaseResponse.lib.js';
 
 @ObjectType()
 export class SignInOutput extends GraphQLBaseResponse {
-  @Field(() => Body, { nullable: false })
-  body!: Body;
+  @Field(() => SignInOutputBody, { nullable: false })
+  body!: SignInOutputBody;
 }
 
 @ObjectType()
-class Body {
-  @IsNotEmpty()
-  @IsString()
+class SignInOutputBody {
   @Field(() => String, { nullable: false })
   accessToken!: string;
 
-  @IsNotEmpty()
-  @IsString()
   @Field(() => String, { nullable: false })
   refreshToken!: string;
 }
