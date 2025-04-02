@@ -11,12 +11,17 @@ type GetUserProfileOutput {
 }
 
 type GetUserProfileOutputBody {
+  active: Boolean!
   dob: String!
   email: String!
+  failedLoginCount: Int!
   firstName: String!
-  id: String!
+  id: ID!
   lastName: String!
   phoneNumber: String!
+  role: Role!
+  twoFA: Boolean!
+  verified: Boolean!
 }
 
 type GraphQLBaseResponse {
@@ -39,6 +44,13 @@ type Query {
   health: HealthOutput!
   signin(email: String!, password: String!): SignInOutput!
   verifyLink(email: String!, password: String!): GraphQLBaseResponse!
+}
+
+"""User Role"""
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+  USER
 }
 
 type SignInOutput {

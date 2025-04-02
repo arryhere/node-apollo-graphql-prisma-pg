@@ -1,4 +1,5 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Role } from '@prisma/client';
+import { Field, ID, Int, ObjectType, registerEnumType } from 'type-graphql';
 import { GraphQLBaseResponse } from '../../../lib/graphqlBaseResponse.lib.js';
 
 @ObjectType()
@@ -9,7 +10,7 @@ export class GetUserProfileOutput extends GraphQLBaseResponse {
 
 @ObjectType()
 class GetUserProfileOutputBody {
-  @Field(() => String, { nullable: false })
+  @Field(() => ID, { nullable: false })
   id!: string;
 
   @Field(() => String, { nullable: false })
@@ -26,4 +27,27 @@ class GetUserProfileOutputBody {
 
   @Field(() => String, { nullable: false })
   phoneNumber!: string;
+
+  @Field(() => Role, { nullable: false })
+  role!: Role;
+
+  @Field(() => Boolean, { nullable: false })
+  verified!: boolean;
+
+  @Field(() => Boolean, { nullable: false })
+  active!: boolean;
+
+  @Field(() => Boolean, { nullable: false })
+  twoFA!: boolean;
+
+  @Field(() => Int, { nullable: false })
+  failedLoginCount!: number;
+
+  // @Field(() => Date, { nullable: true })
+  // accountLockedAt!: Date;
 }
+
+registerEnumType(Role, {
+  name: 'Role', // Mandatory
+  description: 'User Role', // Optional
+});
