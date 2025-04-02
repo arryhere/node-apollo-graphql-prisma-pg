@@ -6,11 +6,11 @@ import type { ApolloGraphqlContext } from '../interface/apolloGraphqlContext.int
 export function AuthorizedRole(roles: Role[]) {
   return createMethodMiddlewareDecorator<ApolloGraphqlContext>(async ({ root, args, context, info }, next) => {
     if (!context.user) {
-      throw new GraphQLError('Insufficient Roles');
+      throw new GraphQLError('Unauthorized');
     }
 
     if (roles.length && !roles.includes(context.user?.role)) {
-      throw new GraphQLError('Insufficient Roles');
+      throw new GraphQLError('Unauthorized');
     }
 
     return next();
