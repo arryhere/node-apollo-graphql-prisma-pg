@@ -1,4 +1,4 @@
-import { Ctx, Query, Resolver } from 'type-graphql';
+import { Authorized, Ctx, Query, Resolver } from 'type-graphql';
 import { HealthOutput } from './dto/health.output.js';
 import { HealthService } from './health.service.js';
 
@@ -6,9 +6,10 @@ import { HealthService } from './health.service.js';
 export class HealthResolver {
   private readonly healthService: HealthService = new HealthService();
 
-  // @Authorized()
+  @Authorized()
   @Query(() => HealthOutput)
   async health(@Ctx() ctx: unknown): Promise<HealthOutput> {
+    console.log({ ctx });
     return await this.healthService.health();
   }
 }

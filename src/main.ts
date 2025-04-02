@@ -5,8 +5,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
-import express from 'express';
-import type { NextFunction, Request, Response } from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import { config } from './config/config.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
 import { restRouter } from './rest/routes/route.js';
@@ -32,7 +31,10 @@ async function main() {
     /* api */
     app.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('root'));
     app.use('/rest', restRouter);
-    app.use('/graphql', expressMiddleware(apolloServer, { context: async () => ({ api: 'graphql' }) }));
+    app.use(
+      '/graphql',
+      expressMiddleware(apolloServer, { context: async ({ req }) => ({ req: req, api: 'graphql' }) })
+    );
     app.use((req: Request, res: Response, next: NextFunction) => res.status(404).send('Page Not Found'));
 
     /* start */
