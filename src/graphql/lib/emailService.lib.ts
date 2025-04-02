@@ -1,4 +1,3 @@
-import { GraphQLError } from 'graphql';
 import nodemailer from 'nodemailer';
 import { config } from '../../config/config.js';
 
@@ -21,7 +20,7 @@ export class EmailService {
 
       console.log('email log', { res });
     } catch (error) {
-      throw new GraphQLError('Error sending email');
+      throw new Error('Error sending email');
     }
   }
 }
