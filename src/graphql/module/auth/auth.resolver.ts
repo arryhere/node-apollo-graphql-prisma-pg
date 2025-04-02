@@ -1,5 +1,5 @@
 import { Arg, Args, Mutation, Query, Resolver } from 'type-graphql';
-import { GraphQLBaseResponse } from '../lib/graphqlBaseResponse.lib.js';
+import { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { AuthService } from './auth.service.js';
 import { SignInInput } from './dto/signIn.input.js';
 import { SignInOutput } from './dto/signIn.output.js';
