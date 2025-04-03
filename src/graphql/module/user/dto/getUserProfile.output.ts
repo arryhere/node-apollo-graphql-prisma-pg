@@ -43,8 +43,14 @@ class GetUserProfileOutputBody {
   @Field(() => Int, { nullable: false })
   failedLoginCount!: number;
 
-  // @Field(() => Date, { nullable: true })
-  // accountLockedAt!: Date;
+  @Field(() => Date, { nullable: true })
+  accountLockedAt!: Date | null;
+
+  @Field(() => Date, { nullable: true })
+  createdAt!: Date;
+
+  @Field(() => Date, { nullable: true })
+  updatedAt!: Date;
 }
 
 registerEnumType(Role, {
