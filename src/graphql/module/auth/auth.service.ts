@@ -8,6 +8,8 @@ import { prisma } from '../../../db/prisma.js';
 import { EmailService } from '../../lib/emailService.lib.js';
 import type { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.js';
+import type { RefreshTokenInput } from './dto/refreshToken.input.js';
+import type { RefreshTokenOutput } from './dto/refreshToken.output.js';
 import type { SignInInput } from './dto/signIn.input.js';
 import type { SignInOutput } from './dto/signIn.output.js';
 import type { SignUpInput } from './dto/signUp.input.js';
@@ -248,6 +250,50 @@ export class AuthService {
       };
     } catch (error) {
       graphqlExceptionHandler(error, 'Error: AuthService > signIn');
+    }
+  }
+
+  async refreshToken(refreshTokenInput: RefreshTokenInput): Promise<RefreshTokenOutput> {
+    try {
+      const { email } = jwt.verify(
+        refreshTokenInput.refreshToken,
+        config.jwtSecret.JWT_REFRESH_TOKEN_SECRET
+      ) as jwt.JwtPayload;
+
+      const user = await prisma.user.findUnique({
+        where: { email: email },
+      });
+
+      if (!user) {
+        throw new GraphQLError('User not found');
+      }
+
+      if (!user.verified) {
+        throw new GraphQLError('User not verified');
+      }
+
+      if (!user.active) {
+        throw new GraphQLError('User not active, contact support');
+      }
+
+      const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
+        expiresIn: '1h',
+      });
+      const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
+        expiresIn: '7d',
+      });
+
+      return {
+        environment: config.app.APP_ENV,
+        success: true,
+        message: 'Refresh token success',
+        body: {
+          accessToken,
+          refreshToken,
+        },
+      };
+    } catch (error) {
+      graphqlExceptionHandler(error, 'Error: AuthService > refreshToken');
     }
   }
 }

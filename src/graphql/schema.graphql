@@ -50,8 +50,21 @@ type Mutation {
 type Query {
   getUserProfile: GetUserProfileOutput!
   health: HealthOutput!
+  refreshToken(refreshToken: String!): RefreshTokenOutput!
   signin(email: String!, password: String!): SignInOutput!
   verifyLink(email: String!, password: String!): GraphQLBaseResponse!
+}
+
+type RefreshTokenOutput {
+  body: RefreshTokenOutputBody!
+  environment: String!
+  message: String!
+  success: Boolean!
+}
+
+type RefreshTokenOutputBody {
+  accessToken: String!
+  refreshToken: String!
 }
 
 """User Role"""
