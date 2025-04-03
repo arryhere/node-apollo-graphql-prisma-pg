@@ -31,4 +31,11 @@ export const config = {
   email: {
     EMAIL_FROM: env.get('EMAIL_FROM').required().asString(),
   },
+
+  jwtExpiration: {
+    JWT_ACCESS_TOKEN_EXPIRATION: env.get('JWT_ACCESS_TOKEN_EXPIRATION').required().asIntPositive(),
+    JWT_REFRESH_TOKEN_EXPIRATION: env.get('JWT_REFRESH_TOKEN_EXPIRATION').required().asIntPositive(),
+    JWT_VERIFY_TOKEN_EXPIRATION: env.get('JWT_VERIFY_TOKEN_EXPIRATION').required().asIntPositive(),
+    JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION: env.get('JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION').required().asIntPositive(),
+  },
 };

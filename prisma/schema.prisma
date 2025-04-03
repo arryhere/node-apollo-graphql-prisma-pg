@@ -16,7 +16,7 @@ datasource db {
 
 enum TokenType {
   VERIFY_TOKEN
-  FORGET_PASSWORD_TOKEN
+  FORGOT_PASSWORD_TOKEN
   TWO_FA_TOKEN
 }
 

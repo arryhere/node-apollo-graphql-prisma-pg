@@ -8,6 +8,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+input ForgotPasswordInput {
+  email: String!
+}
+
 type GetUserProfileOutput {
   body: GetUserProfileOutputBody!
   environment: String!
@@ -43,6 +47,7 @@ type HealthOutput {
 }
 
 type Mutation {
+  forgotPassword(forgotPasswordInput: ForgotPasswordInput!): GraphQLBaseResponse!
   signUp(signUpInput: SignUpInput!): GraphQLBaseResponse!
   verify(verifyInput: VerifyInput!): GraphQLBaseResponse!
 }

@@ -8,6 +8,7 @@ import { prisma } from '../../../db/prisma.js';
 import { EmailService } from '../../lib/emailService.lib.js';
 import type { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.js';
+import type { ForgotPasswordInput } from './dto/forgotPassword.input.js';
 import type { RefreshTokenInput } from './dto/refreshToken.input.js';
 import type { RefreshTokenOutput } from './dto/refreshToken.output.js';
 import type { SignInInput } from './dto/signIn.input.js';
@@ -43,7 +44,7 @@ export class AuthService {
       });
 
       const verifyToken = jwt.sign({ email: signUpInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-        expiresIn: '10m',
+        expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
       await prisma.token.create({
@@ -91,7 +92,7 @@ export class AuthService {
       }
 
       const verifyToken = jwt.sign({ email: verifyLinkInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-        expiresIn: '10m',
+        expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
       await prisma.token.create({
@@ -207,7 +208,7 @@ export class AuthService {
       if (!user.verified) {
         try {
           const verifyToken = jwt.sign({ email: signInInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-            expiresIn: '10m',
+            expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
           });
 
           await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
@@ -233,10 +234,10 @@ export class AuthService {
       }
 
       const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h',
+        expiresIn: config.jwtExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
       });
       const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
-        expiresIn: '7d',
+        expiresIn: config.jwtExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
       });
 
       return {
@@ -277,10 +278,10 @@ export class AuthService {
       }
 
       const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h',
+        expiresIn: config.jwtExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
       });
       const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
-        expiresIn: '7d',
+        expiresIn: config.jwtExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
       });
 
       return {
@@ -294,6 +295,50 @@ export class AuthService {
       };
     } catch (error) {
       graphqlExceptionHandler(error, 'Error: AuthService > refreshToken');
+    }
+  }
+
+  async forgotPassword(forgotPasswordInput: ForgotPasswordInput): Promise<GraphQLBaseResponse> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email: forgotPasswordInput.email },
+      });
+
+      if (!user) {
+        throw new GraphQLError('User not found');
+      }
+
+      if (!user.active) {
+        throw new GraphQLError('User not active, contact support');
+      }
+
+      const forgotPasswordToken = jwt.sign(
+        { email: forgotPasswordInput.email },
+        config.jwtSecret.JWT_FORGOT_PASSWORD_TOKEN_SECRET,
+        { expiresIn: config.jwtExpiration.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION }
+      );
+
+      await this.emailService.sendEmail(
+        'Forget Password Link',
+        `token: ${forgotPasswordToken}`,
+        forgotPasswordInput.email
+      );
+
+      await prisma.token.create({
+        data: {
+          token: forgotPasswordToken,
+          tokenType: TokenType.FORGOT_PASSWORD_TOKEN,
+          userId: user.id,
+        },
+      });
+
+      return {
+        environment: config.app.APP_ENV,
+        success: true,
+        message: 'Forgot password link sent successfully',
+      };
+    } catch (error) {
+      graphqlExceptionHandler(error, 'Error: AuthService > forgotPassword');
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Arg, Args, Mutation, Query, Resolver } from 'type-graphql';
 import { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { AuthService } from './auth.service.js';
+import { ForgotPasswordInput } from './dto/forgotPassword.input.js';
 import { RefreshTokenInput } from './dto/refreshToken.input.js';
 import { RefreshTokenOutput } from './dto/refreshToken.output.js';
 import { SignInInput } from './dto/signIn.input.js';
@@ -36,5 +37,12 @@ export class AuthResolver {
   @Query(() => RefreshTokenOutput)
   async refreshToken(@Args(() => RefreshTokenInput) refreshTokenInput: RefreshTokenInput): Promise<RefreshTokenOutput> {
     return await this.authService.refreshToken(refreshTokenInput);
+  }
+
+  @Mutation(() => GraphQLBaseResponse)
+  async forgotPassword(
+    @Arg('forgotPasswordInput', () => ForgotPasswordInput) forgotPasswordInput: ForgotPasswordInput
+  ): Promise<GraphQLBaseResponse> {
+    return await this.authService.forgotPassword(forgotPasswordInput);
   }
 }
