@@ -48,6 +48,7 @@ type HealthOutput {
 
 type Mutation {
   forgotPassword(forgotPasswordInput: ForgotPasswordInput!): GraphQLBaseResponse!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): GraphQLBaseResponse!
   signUp(signUpInput: SignUpInput!): GraphQLBaseResponse!
   verify(verifyInput: VerifyInput!): GraphQLBaseResponse!
 }
@@ -70,6 +71,11 @@ type RefreshTokenOutput {
 type RefreshTokenOutputBody {
   accessToken: String!
   refreshToken: String!
+}
+
+input ResetPasswordInput {
+  newPassword: String!
+  token: String!
 }
 
 """User Role"""

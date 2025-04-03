@@ -11,6 +11,7 @@ import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.j
 import type { ForgotPasswordInput } from './dto/forgotPassword.input.js';
 import type { RefreshTokenInput } from './dto/refreshToken.input.js';
 import type { RefreshTokenOutput } from './dto/refreshToken.output.js';
+import type { ResetPasswordInput } from './dto/resetPassword.input.js';
 import type { SignInInput } from './dto/signIn.input.js';
 import type { SignInOutput } from './dto/signIn.output.js';
 import type { SignUpInput } from './dto/signUp.input.js';
@@ -339,6 +340,58 @@ export class AuthService {
       };
     } catch (error) {
       graphqlExceptionHandler(error, 'Error: AuthService > forgotPassword');
+    }
+  }
+
+  async resetPassword(resetPasswordInput: ResetPasswordInput): Promise<GraphQLBaseResponse> {
+    try {
+      const { email } = jwt.verify(
+        resetPasswordInput.token,
+        config.jwtSecret.JWT_FORGOT_PASSWORD_TOKEN_SECRET
+      ) as jwt.JwtPayload;
+
+      const user = await prisma.user.findUnique({
+        where: { email: email },
+      });
+
+      if (!user) {
+        throw new GraphQLError('User not found');
+      }
+
+      if (!user.active) {
+        throw new GraphQLError('User not active, contact support');
+      }
+
+      const forgotPasswordToken = await prisma.token.findUnique({
+        where: { userId_token: { userId: user.id, token: resetPasswordInput.token } },
+      });
+
+      if (!forgotPasswordToken) {
+        throw new GraphQLError('Invalid Token');
+      }
+
+      if (differenceInMinutes(new Date(), forgotPasswordToken.createdAt) > 10) {
+        throw new GraphQLError('Token Expired');
+      }
+
+      const newPasswordHash = await bcrypt.hash(resetPasswordInput.newPassword, 10);
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordHash: newPasswordHash },
+      });
+
+      await prisma.token.delete({
+        where: { userId_token: { userId: user.id, token: resetPasswordInput.token } },
+      });
+
+      return {
+        environment: config.app.APP_ENV,
+        success: true,
+        message: 'User password reset successfully',
+      };
+    } catch (error) {
+      graphqlExceptionHandler(error, 'Error: AuthService > resetPassword');
     }
   }
 }

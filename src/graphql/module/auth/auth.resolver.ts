@@ -4,6 +4,7 @@ import { AuthService } from './auth.service.js';
 import { ForgotPasswordInput } from './dto/forgotPassword.input.js';
 import { RefreshTokenInput } from './dto/refreshToken.input.js';
 import { RefreshTokenOutput } from './dto/refreshToken.output.js';
+import { ResetPasswordInput } from './dto/resetPassword.input.js';
 import { SignInInput } from './dto/signIn.input.js';
 import { SignInOutput } from './dto/signIn.output.js';
 import { SignUpInput } from './dto/signUp.input.js';
@@ -44,5 +45,12 @@ export class AuthResolver {
     @Arg('forgotPasswordInput', () => ForgotPasswordInput) forgotPasswordInput: ForgotPasswordInput
   ): Promise<GraphQLBaseResponse> {
     return await this.authService.forgotPassword(forgotPasswordInput);
+  }
+
+  @Mutation(() => GraphQLBaseResponse)
+  async resetPassword(
+    @Arg('resetPasswordInput', () => ResetPasswordInput) resetPasswordInput: ResetPasswordInput
+  ): Promise<GraphQLBaseResponse> {
+    return await this.authService.resetPassword(resetPasswordInput);
   }
 }
