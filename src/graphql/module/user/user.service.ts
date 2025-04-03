@@ -22,25 +22,3 @@ export class UserService {
     }
   }
 }
-
-/**
- * 
- * 
- * {
-  id: '1c51353e-62e1-40f6-b089-1d9d7f8b96f5',
-  firstName: 'Arijit',
-  lastName: 'Das',
-  email: 'arijit+user@itobuz.com',
-  dob: '1999-05-28',
-  phoneNumber: '+91 9123929831',
-  passwordHash: '$2b$10$KbH8XpshYrmoonTD1N4V3.6NW4Of7vN1G2dhZQX3EMKt82QumIakS',
-  role: 'USER',
-  verified: true,
-  active: true,
-  twoFA: false,
-  failedLoginCount: 0,
-  accountLockedAt: null,
-  createdAt: 2025-03-31T10:14:00.499Z,
-  updatedAt: 2025-03-31T10:14:37.867Z
-}
- */

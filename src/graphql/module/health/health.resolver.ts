@@ -1,5 +1,4 @@
-import { Ctx, Query, Resolver } from 'type-graphql';
-import type { ApolloGraphqlContext } from '../../interface/apolloGraphqlContext.interface.js';
+import { Query, Resolver } from 'type-graphql';
 import { HealthOutput } from './dto/health.output.js';
 import { HealthService } from './health.service.js';
 
@@ -8,7 +7,7 @@ export class HealthResolver {
   private readonly healthService: HealthService = new HealthService();
 
   @Query(() => HealthOutput)
-  async health(@Ctx() ctx: ApolloGraphqlContext): Promise<HealthOutput> {
+  async health(): Promise<HealthOutput> {
     return await this.healthService.health();
   }
 }
