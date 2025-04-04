@@ -6,6 +6,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import { config } from './config/config.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
 import { restRouter } from './rest/routes/route.js';
@@ -24,6 +25,7 @@ async function main() {
     await apolloServer.start();
 
     /* middlewares */
+    app.use(graphqlUploadExpress({ maxFileSize: 10_000_000, maxFiles: 1 }));
     app.use(cors());
     app.use(express.json({ limit: '50mb', type: 'application/json' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true, type: 'application/x-www-form-urlencoded' }));
