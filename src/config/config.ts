@@ -7,6 +7,10 @@ export const config = {
     APP_PORT: env.get('APP_PORT').required().asPortNumber(),
   },
 
+  graphql: {
+    GRAPHQL_QUERY_COMPLEXITY: env.get('GRAPHQL_QUERY_COMPLEXITY').required().asIntPositive(),
+  },
+
   postgres: {
     POSTGRES_USER: env.get('POSTGRES_USER').required().asString(),
     POSTGRES_PASSWORD: env.get('POSTGRES_PASSWORD').required().asString(),

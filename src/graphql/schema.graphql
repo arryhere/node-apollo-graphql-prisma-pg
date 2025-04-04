@@ -79,7 +79,9 @@ input ResetPasswordInput {
   token: String!
 }
 
-"""User Role"""
+"""
+User Role
+"""
 enum Role {
   ADMIN
   SUPER_ADMIN
@@ -107,7 +109,9 @@ input SignUpInput {
   phoneNumber: String!
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""
+The `Upload` scalar type represents a file upload.
+"""
 scalar Upload
 
 input VerifyInput {
