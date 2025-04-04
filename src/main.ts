@@ -25,7 +25,7 @@ async function main() {
     await apolloServer.start();
 
     /* middlewares */
-    app.use(graphqlUploadExpress({ maxFileSize: 10_000_000, maxFiles: 1 }));
+    app.use(graphqlUploadExpress({ maxFileSize: 1 * 1024 * 1024, maxFiles: 1 }));
     app.use(cors());
     app.use(express.json({ limit: '50mb', type: 'application/json' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true, type: 'application/x-www-form-urlencoded' }));
