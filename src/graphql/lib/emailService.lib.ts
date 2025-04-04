@@ -18,7 +18,7 @@ export class EmailService {
         html: html,
       });
 
-      console.log('email log', { res });
+      console.log('[Email]:', { email: res });
     } catch (error) {
       throw new Error('Error sending email');
     }
