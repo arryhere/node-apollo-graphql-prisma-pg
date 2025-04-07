@@ -33,7 +33,8 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
     "reflect-metadata": "^0.2.2",
-    "type-graphql": "^2.0.0-rc.2"
+    "type-graphql": "^2.0.0-rc.2",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
