@@ -5,7 +5,7 @@ export function IsDate_yyyyMMdd(validationOptions?: ValidationOptions) {
   // biome-ignore lint/complexity/noBannedTypes: <explanation>
   return (object: Object, propertyName: string) => {
     registerDecorator({
-      name: 'isFutureDate',
+      name: 'IsDate_yyyyMMdd',
       target: object.constructor,
       propertyName,
       options: validationOptions,

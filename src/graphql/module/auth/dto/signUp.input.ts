@@ -23,7 +23,6 @@ export class SignUpInput {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(10)
   @IsDate_yyyyMMdd()
   @Field(() => String, { nullable: false })
   dob!: string;
