@@ -5,8 +5,8 @@ import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { config } from '../../../config/config.js';
 import { prisma } from '../../../db/prisma.js';
-import { GraphqlEmailService } from '../../lib/graphqlEmailService.lib.js';
 import type { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
+import { GraphqlEmailService } from '../../lib/graphqlEmailService.lib.js';
 import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.js';
 import type { ForgotPasswordInput } from './dto/forgotPassword.input.js';
 import type { RefreshTokenInput } from './dto/refreshToken.input.js';
@@ -104,7 +104,11 @@ export class AuthService {
         },
       });
 
-      await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, verifyLinkInput.email);
+      await this.graphqlEmailService.sendEmail(
+        'User Verification Link',
+        `token: ${verifyToken}`,
+        verifyLinkInput.email
+      );
 
       return {
         environment: config.app.APP_ENV,
@@ -212,7 +216,11 @@ export class AuthService {
             expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
           });
 
-          await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
+          await this.graphqlEmailService.sendEmail(
+            'User Verification Link',
+            `token: ${verifyToken}`,
+            signInInput.email
+          );
 
           return {
             environment: config.app.APP_ENV,
