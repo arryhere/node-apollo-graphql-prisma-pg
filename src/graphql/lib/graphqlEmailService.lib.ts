@@ -1,7 +1,8 @@
+import { GraphQLError } from 'graphql';
 import nodemailer from 'nodemailer';
 import { config } from '../../config/config.js';
 
-export class EmailService {
+export class GraphqlEmailService {
   async sendEmail(subject: string, html: string, toEmail: string): Promise<void> {
     try {
       const mail_transport = nodemailer.createTransport({
@@ -20,7 +21,7 @@ export class EmailService {
 
       console.log('[Email]:', { email: res });
     } catch (error) {
-      throw new Error('Error sending email');
+      throw new GraphQLError('Error sending email');
     }
   }
 }

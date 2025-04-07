@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { config } from '../../../config/config.js';
 import { prisma } from '../../../db/prisma.js';
-import { EmailService } from '../../lib/emailService.lib.js';
+import { GraphqlEmailService } from '../../lib/graphqlEmailService.lib.js';
 import type { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.js';
 import type { ForgotPasswordInput } from './dto/forgotPassword.input.js';
@@ -19,7 +19,7 @@ import type { VerifyInput } from './dto/verify.input.js';
 import type { VerifyLinkInput } from './dto/verifyLink.input.js';
 
 export class AuthService {
-  private readonly emailService: EmailService = new EmailService();
+  private readonly graphqlEmailService: GraphqlEmailService = new GraphqlEmailService();
 
   async signUp(signUpInput: SignUpInput): Promise<GraphQLBaseResponse> {
     try {
@@ -56,7 +56,7 @@ export class AuthService {
         },
       });
 
-      await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signUpInput.email);
+      await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signUpInput.email);
 
       return {
         environment: config.app.APP_ENV,
@@ -104,7 +104,7 @@ export class AuthService {
         },
       });
 
-      await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, verifyLinkInput.email);
+      await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, verifyLinkInput.email);
 
       return {
         environment: config.app.APP_ENV,
@@ -212,7 +212,7 @@ export class AuthService {
             expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
           });
 
-          await this.emailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
+          await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signInInput.email);
 
           return {
             environment: config.app.APP_ENV,
@@ -319,7 +319,7 @@ export class AuthService {
         { expiresIn: config.jwtExpiration.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION }
       );
 
-      await this.emailService.sendEmail(
+      await this.graphqlEmailService.sendEmail(
         'Forget Password Link',
         `token: ${forgotPasswordToken}`,
         forgotPasswordInput.email
