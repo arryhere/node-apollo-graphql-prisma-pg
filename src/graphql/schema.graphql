@@ -50,7 +50,7 @@ type Mutation {
   forgotPassword(forgotPasswordInput: ForgotPasswordInput!): GraphQLBaseResponse!
   resetPassword(resetPasswordInput: ResetPasswordInput!): GraphQLBaseResponse!
   signUp(signUpInput: SignUpInput!): GraphQLBaseResponse!
-  uploadUserProfileImage(file: Upload!): GraphQLBaseResponse!
+  uploadUserProfileImage(files: [Upload!]!): GraphQLBaseResponse!
   verify(verifyInput: VerifyInput!): GraphQLBaseResponse!
 }
 

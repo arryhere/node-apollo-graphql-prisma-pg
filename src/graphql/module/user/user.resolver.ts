@@ -20,33 +20,50 @@ export class UserResolver {
   }
 
   @Mutation(() => GraphQLBaseResponse)
-  async uploadUserProfileImage(@Arg('file', () => GraphQLUpload) file: FileUpload): Promise<GraphQLBaseResponse> {
-    /*
+  async uploadUserProfileImage(@Arg('files', () => [GraphQLUpload]) files: FileUpload[]): Promise<GraphQLBaseResponse> {
+    /* single upload
+
 curl --location 'http://localhost:4005/graphql' \
 --header 'Apollo-Require-Preflight: true' \
 --header 'x-apollo-operation-name: UploadUserProfileImage' \
 --form 'operations={"query":"mutation UploadUserProfileImage($file: Upload!) { uploadUserProfileImage(file: $file) { success message } }","variables":{"file": null}}' \
 --form 'map={"0":["variables.file"]}' \
 --form '0=@"/Users/arijit/Pictures/Image 67171553 673x949.jpg"'
-  */
 
-    const { createReadStream, filename, mimetype } = file;
+*/
 
-    // Convert stream to buffer
-    const buffer = await new Promise<Buffer>((resolve, reject) => {
-      const chunks: Buffer[] = [];
-      const stream = createReadStream();
+    /* multiple upload
 
-      stream.on('data', (chunk) => chunks.push(chunk));
-      stream.on('end', () => resolve(Buffer.concat(chunks)));
-      stream.on('error', (err) => reject(err));
-    });
+curl --location 'http://localhost:4005/graphql' \
+--header 'Apollo-Require-Preflight: true' \
+--header 'x-apollo-operation-name: UploadUserProfileImage' \
+--form 'operations={"query":"mutation UploadUserProfileImage($files: [Upload!]!) { uploadUserProfileImage(files: $files) { success message } }","variables":{"files":[null, null]}}' \
+--form 'map={"0":["variables.files.0"],"1":["variables.files.1"]}' \
+--form '0=@"/Users/arijit/Pictures/test_2.jpg"' \
+--form '1=@"/Users/arijit/Pictures/test_2.jpg"'
 
-    console.log({
-      filename,
-      mimetype,
-      buffer: buffer,
-    });
+*/
+
+    for await (const file of files) {
+      const { createReadStream, filename, mimetype } = file;
+
+      // Convert stream to buffer
+      const buffer = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        const stream = createReadStream();
+
+        stream.on('data', (chunk) => chunks.push(chunk));
+        stream.on('end', () => resolve(Buffer.concat(chunks)));
+        stream.on('error', (err) => reject(err));
+      });
+
+      console.log({
+        filename,
+        mimetype,
+        buffer: buffer,
+      });
+    }
+
     return {
       environment: config.app.APP_ENV,
       success: true,
