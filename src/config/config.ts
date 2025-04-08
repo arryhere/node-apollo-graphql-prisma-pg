@@ -18,6 +18,10 @@ export const config = {
     POSTGRES_DATABASE_URL: env.get('POSTGRES_DATABASE_URL').required().asString(),
   },
 
+  redis: {
+    REDIS_DATABASE_URL: env.get('REDIS_DATABASE_URL').required().asString(),
+  },
+
   jwtSecret: {
     JWT_ACCESS_TOKEN_SECRET: env.get('JWT_ACCESS_TOKEN_SECRET').required().asString(),
     JWT_REFRESH_TOKEN_SECRET: env.get('JWT_REFRESH_TOKEN_SECRET').required().asString(),
@@ -36,7 +40,7 @@ export const config = {
     EMAIL_FROM: env.get('EMAIL_FROM').required().asString(),
   },
 
-  jwtExpiration: {
+  tokenExpiration: {
     JWT_ACCESS_TOKEN_EXPIRATION: env.get('JWT_ACCESS_TOKEN_EXPIRATION').required().asIntPositive(),
     JWT_REFRESH_TOKEN_EXPIRATION: env.get('JWT_REFRESH_TOKEN_EXPIRATION').required().asIntPositive(),
     JWT_VERIFY_TOKEN_EXPIRATION: env.get('JWT_VERIFY_TOKEN_EXPIRATION').required().asIntPositive(),

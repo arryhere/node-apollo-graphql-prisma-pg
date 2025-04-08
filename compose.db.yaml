@@ -1,4 +1,4 @@
-name: compose-db-node-express-graphql-pg
+name: "compose-node-apollo-graphql-prisma"
 
 services:
   postgres:

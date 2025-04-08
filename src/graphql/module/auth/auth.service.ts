@@ -45,7 +45,7 @@ export class AuthService {
       });
 
       const verifyToken = jwt.sign({ email: signUpInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
       await prisma.token.create({
@@ -93,7 +93,7 @@ export class AuthService {
       }
 
       const verifyToken = jwt.sign({ email: verifyLinkInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
       await prisma.token.create({
@@ -213,7 +213,7 @@ export class AuthService {
       if (!user.verified) {
         try {
           const verifyToken = jwt.sign({ email: signInInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
-            expiresIn: config.jwtExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+            expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
           });
 
           await this.graphqlEmailService.sendEmail(
@@ -243,10 +243,10 @@ export class AuthService {
       }
 
       const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
       });
       const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
       });
 
       return {
@@ -287,10 +287,10 @@ export class AuthService {
       }
 
       const accessToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_ACCESS_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_ACCESS_TOKEN_EXPIRATION,
       });
       const refreshToken = jwt.sign({ id: user.id, email: user.email }, config.jwtSecret.JWT_REFRESH_TOKEN_SECRET, {
-        expiresIn: config.jwtExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
+        expiresIn: config.tokenExpiration.JWT_REFRESH_TOKEN_EXPIRATION,
       });
 
       return {
@@ -324,7 +324,7 @@ export class AuthService {
       const forgotPasswordToken = jwt.sign(
         { email: forgotPasswordInput.email },
         config.jwtSecret.JWT_FORGOT_PASSWORD_TOKEN_SECRET,
-        { expiresIn: config.jwtExpiration.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION }
+        { expiresIn: config.tokenExpiration.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION }
       );
 
       await this.graphqlEmailService.sendEmail(
