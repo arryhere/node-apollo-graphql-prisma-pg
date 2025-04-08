@@ -1,10 +1,10 @@
 name: compose-db-node-express-graphql-pg
 
 services:
-  db:
+  postgres:
     # pg out container uri     : postgresql://postgres:postgres@localhost:5432/my_db?schema=public
-    # pg in container uri      : postgresql://postgres:postgres@db:5432/my_db?schema=public
-    container_name: postgres-db-container
+    # pg in container uri      : postgresql://postgres:postgres@postgres:5432/my_db?schema=public
+    container_name: postgres
     image: postgres:latest
     restart: on-failure:3
     environment:
@@ -14,4 +14,20 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./tmp/db:/var/lib/postgresql/data
+      - ./tmp/pg_data:/var/lib/postgresql/data
+
+  redis_stack:
+    # redis out container uri     : redis://root:password@localhost:6379/0
+    # redis in container uri      : redis://root:password@redis_stack:6379/0
+    # redis insight               : http://localhost:8001
+
+    container_name: redis_stack
+    image: redis/redis-stack:latest
+    restart: on-failure:3
+    environment:
+      REDIS_ARGS: '--requirepass password --user root on >password ~* allcommands --user default off nopass nocommands'
+    ports:
+      - 6379:6379
+      - 8001:8001
+    volumes:
+      - ./tmp/redis_data:/data
