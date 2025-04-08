@@ -7,7 +7,7 @@ import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import { config } from './config/config.js';
-import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
+// import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
 import { restRouter } from './rest/routes/route.js';
 
@@ -20,17 +20,16 @@ async function main() {
     /* apollo server */
     const apolloServer = new ApolloServer({
       schema: typegraphqlSchema,
-
-      plugins: [ApolloServerPluginDrainHttpServer({ httpServer: http_server }), graphqlQueryComplexity],
+      introspection: config.app.APP_ENV === 'dev',
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer: http_server }),
+        // graphqlQueryComplexity
+      ],
     });
     await apolloServer.start();
 
     /* middlewares */
-    app.use(
-      cors({
-        origin: '*',
-      })
-    );
+    app.use(cors());
     app.use(express.json({ limit: '50mb', type: 'application/json' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true, type: 'application/x-www-form-urlencoded' }));
     app.use(graphqlUploadExpress({ maxFileSize: 1 * 1024 * 1024, maxFiles: 5 }));
