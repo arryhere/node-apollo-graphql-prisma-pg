@@ -1,4 +1,3 @@
-// import 'core-js/features/reflect'; // use this or reflect-metadata
 import 'reflect-metadata';
 import http from 'node:http';
 import { ApolloServer } from '@apollo/server';
@@ -8,7 +7,7 @@ import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import { config } from './config/config.js';
-import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
+// import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
 import { restRouter } from './rest/routes/route.js';
 
@@ -21,8 +20,11 @@ async function main() {
     /* apollo server */
     const apolloServer = new ApolloServer({
       schema: typegraphqlSchema,
-
-      plugins: [ApolloServerPluginDrainHttpServer({ httpServer: http_server }), graphqlQueryComplexity],
+      introspection: config.app.APP_ENV === 'dev',
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer: http_server }),
+        // graphqlQueryComplexity
+      ],
     });
     await apolloServer.start();
 
