@@ -1,4 +1,3 @@
-// src/lib/redis.ts
 import { Redis } from 'ioredis';
 import { config } from '../config/config.js';
 
