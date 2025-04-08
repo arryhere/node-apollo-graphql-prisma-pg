@@ -1,10 +1,12 @@
-import { TokenType } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { differenceInMinutes } from 'date-fns';
 import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { config } from '../../../config/config.js';
 import { prisma } from '../../../db/prisma.js';
+import { redisClient } from '../../../db/redis.js';
+
+import { APP_ENUM } from '../../../common/enum/appEnum.js';
 import type { GraphQLBaseResponse } from '../../lib/graphqlBaseResponse.lib.js';
 import { GraphqlEmailService } from '../../lib/graphqlEmailService.lib.js';
 import { graphqlExceptionHandler } from '../../lib/graphqlExceptionHandler.lib.js';
@@ -48,13 +50,11 @@ export class AuthService {
         expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
-      await prisma.token.create({
-        data: {
-          token: verifyToken,
-          tokenType: TokenType.VERIFY_TOKEN,
-          userId: newUser.id,
-        },
-      });
+      await redisClient.setex(
+        `${newUser.id}:${APP_ENUM.TokenType.VERIFY_TOKEN}`,
+        config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+        verifyToken
+      );
 
       await this.graphqlEmailService.sendEmail('User Verification Link', `token: ${verifyToken}`, signUpInput.email);
 
@@ -96,13 +96,11 @@ export class AuthService {
         expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
       });
 
-      await prisma.token.create({
-        data: {
-          token: verifyToken,
-          tokenType: TokenType.VERIFY_TOKEN,
-          userId: existingUser.id,
-        },
-      });
+      await redisClient.setex(
+        `${existingUser.id}:${APP_ENUM.TokenType.VERIFY_TOKEN}`,
+        config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+        verifyToken
+      );
 
       await this.graphqlEmailService.sendEmail(
         'User Verification Link',
@@ -142,24 +140,14 @@ export class AuthService {
         throw new GraphQLError('User not found');
       }
 
-      const token = await prisma.token.findUnique({
-        where: { userId_token: { userId: user.id, token: verifyInput.token } },
-      });
+      const token = await redisClient.get(`${user.id}:${APP_ENUM.TokenType.VERIFY_TOKEN}`);
 
       if (!token) {
         throw new GraphQLError('Token not found');
       }
 
-      if (token.tokenType !== TokenType.VERIFY_TOKEN) {
-        throw new GraphQLError('Invalid token type');
-      }
-
-      if (differenceInMinutes(new Date(), token.createdAt) > 10) {
-        await prisma.token.delete({
-          where: { userId_token: { userId: user.id, token: verifyInput.token } },
-        });
-
-        throw new GraphQLError('Token expired');
+      if (token !== verifyInput.token) {
+        throw new GraphQLError('Invalid token');
       }
 
       await prisma.user.update({
@@ -167,9 +155,7 @@ export class AuthService {
         data: { verified: true },
       });
 
-      await prisma.token.delete({
-        where: { userId_token: { userId: user.id, token: verifyInput.token } },
-      });
+      await redisClient.del(`${user.id}:${APP_ENUM.TokenType.VERIFY_TOKEN}`);
 
       return {
         environment: config.app.APP_ENV,
@@ -215,6 +201,12 @@ export class AuthService {
           const verifyToken = jwt.sign({ email: signInInput.email }, config.jwtSecret.JWT_VERIFY_TOKEN_SECRET, {
             expiresIn: config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
           });
+
+          await redisClient.setex(
+            `${user.id}:${APP_ENUM.TokenType.VERIFY_TOKEN}`,
+            config.tokenExpiration.JWT_VERIFY_TOKEN_EXPIRATION,
+            verifyToken
+          );
 
           await this.graphqlEmailService.sendEmail(
             'User Verification Link',
@@ -333,13 +325,11 @@ export class AuthService {
         forgotPasswordInput.email
       );
 
-      await prisma.token.create({
-        data: {
-          token: forgotPasswordToken,
-          tokenType: TokenType.FORGOT_PASSWORD_TOKEN,
-          userId: user.id,
-        },
-      });
+      await redisClient.setex(
+        `${user.id}:${APP_ENUM.TokenType.FORGOT_PASSWORD_TOKEN}`,
+        config.tokenExpiration.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION,
+        forgotPasswordToken
+      );
 
       return {
         environment: config.app.APP_ENV,
@@ -370,16 +360,14 @@ export class AuthService {
         throw new GraphQLError('User not active, contact support');
       }
 
-      const forgotPasswordToken = await prisma.token.findUnique({
-        where: { userId_token: { userId: user.id, token: resetPasswordInput.token } },
-      });
+      const forgotPasswordToken = await redisClient.get(`${user.id}:${APP_ENUM.TokenType.FORGOT_PASSWORD_TOKEN}`);
 
       if (!forgotPasswordToken) {
         throw new GraphQLError('Invalid Token');
       }
 
-      if (differenceInMinutes(new Date(), forgotPasswordToken.createdAt) > 10) {
-        throw new GraphQLError('Token Expired');
+      if (forgotPasswordToken !== resetPasswordInput.token) {
+        throw new GraphQLError('Invalid Token');
       }
 
       const newPasswordHash = await bcrypt.hash(resetPasswordInput.newPassword, 10);
@@ -389,9 +377,7 @@ export class AuthService {
         data: { passwordHash: newPasswordHash },
       });
 
-      await prisma.token.delete({
-        where: { userId_token: { userId: user.id, token: resetPasswordInput.token } },
-      });
+      await redisClient.del(`${user.id}:${APP_ENUM.TokenType.FORGOT_PASSWORD_TOKEN}`);
 
       return {
         environment: config.app.APP_ENV,

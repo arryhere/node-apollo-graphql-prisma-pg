@@ -6,6 +6,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
+import { APP_ENUM } from './common/enum/appEnum.js';
 import { config } from './config/config.js';
 // import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
@@ -20,7 +21,7 @@ async function main() {
     /* apollo server */
     const apolloServer = new ApolloServer({
       schema: typegraphqlSchema,
-      introspection: config.app.APP_ENV === 'dev',
+      introspection: config.app.APP_ENV !== APP_ENUM.APP_ENV.PROD,
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer: http_server }),
         // graphqlQueryComplexity
