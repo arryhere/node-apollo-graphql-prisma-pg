@@ -1,4 +1,3 @@
-// import 'core-js/features/reflect'; // use this or reflect-metadata
 import 'reflect-metadata';
 import http from 'node:http';
 import { ApolloServer } from '@apollo/server';
@@ -27,7 +26,11 @@ async function main() {
     await apolloServer.start();
 
     /* middlewares */
-    app.use(cors());
+    app.use(
+      cors({
+        origin: '*',
+      })
+    );
     app.use(express.json({ limit: '50mb', type: 'application/json' }));
     app.use(express.urlencoded({ limit: '50mb', extended: true, type: 'application/x-www-form-urlencoded' }));
     app.use(graphqlUploadExpress({ maxFileSize: 1 * 1024 * 1024, maxFiles: 5 }));
