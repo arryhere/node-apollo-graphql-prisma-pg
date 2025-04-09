@@ -18,5 +18,5 @@ try {
   console.log('esbuild error:', error);
 }
 
-// currently esbuild has issues with esm output [format: 'esm'], so for now we are targetting cjs build
-// we hope to update this to esm build output in th future, if things are fixed from node and esbuild side
+// currently esbuild has issues with esm output [format: 'esm'], so for now we are targeting cjs build
+// we hope to update this to esm build output in the future, if things are fixed from node and esbuild side
