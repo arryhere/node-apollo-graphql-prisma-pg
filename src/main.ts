@@ -15,6 +15,7 @@ import { restRouter } from './rest/routes/route.js';
 async function main() {
   try {
     const port = config.app.APP_PORT;
+    const host = config.app.APP_HOST;
     const app = express();
     const http_server = http.createServer(app);
 
@@ -38,6 +39,7 @@ async function main() {
     /* api */
     app.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('root'));
 
+    /* api version: v1 */
     const apiRouterV1 = Router();
     apiRouterV1.use('/rest', restRouter);
     apiRouterV1.use(
@@ -46,13 +48,16 @@ async function main() {
     );
     app.use('/api/v1', apiRouterV1);
 
+    /* api version: v2 */
+    // future implementation
+
     app.use((req: Request, res: Response, next: NextFunction) => res.status(404).send('Page Not Found'));
 
     /* start */
     await new Promise<void>((resolve) => http_server.listen({ port: port }, resolve));
 
-    console.log(`[rest]: http://localhost:${port}/api/v1/rest/`);
-    console.log(`[graphql]: http://localhost:${port}/api/v1/graphql/`);
+    console.log(`[rest]: http://${host}:${port}/api/v1/rest/`);
+    console.log(`[graphql]: http://${host}:${port}/api/v1/graphql/`);
   } catch (error) {
     console.log('[Error]:', error);
   }
