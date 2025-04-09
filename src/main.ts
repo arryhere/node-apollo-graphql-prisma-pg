@@ -10,7 +10,7 @@ import { APP_ENUM } from './common/enum/appEnum.js';
 import { config } from './config/config.js';
 // import { graphqlQueryComplexity } from './graphql/lib/graphqlQueryComplexity.lib.js';
 import { typegraphqlSchema } from './graphql/typegraphqlSchema.js';
-import { restRouter } from './rest/routes/route.js';
+import { restRouter } from './rest/restRouter.js';
 
 async function main() {
   try {
