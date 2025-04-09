@@ -45,5 +45,6 @@ export const config = {
     REFRESH_TOKEN_EXPIRATION: env.get('REFRESH_TOKEN_EXPIRATION').required().asIntPositive(),
     VERIFY_TOKEN_EXPIRATION: env.get('VERIFY_TOKEN_EXPIRATION').required().asIntPositive(),
     FORGOT_PASSWORD_TOKEN_EXPIRATION: env.get('FORGOT_PASSWORD_TOKEN_EXPIRATION').required().asIntPositive(),
+    TWO_FA_TOKEN_EXPIRATION: env.get('TWO_FA_TOKEN_EXPIRATION').required().asIntPositive(),
   },
 };
