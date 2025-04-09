@@ -8,7 +8,7 @@ export const graphqlQueryComplexity = {
   requestDidStart: async () => ({
     async didResolveOperation({ request, document }: { request: GraphQLRequest; document: DocumentNode }) {
       const complexity = getComplexity({
-        schema: typegraphqlSchema,
+        schema: await typegraphqlSchema,
         operationName: request.operationName,
         query: document,
         variables: request.variables,

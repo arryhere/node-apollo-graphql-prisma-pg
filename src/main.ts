@@ -21,7 +21,7 @@ async function main() {
 
     /* apollo server */
     const apolloServer = new ApolloServer({
-      schema: typegraphqlSchema,
+      schema: await typegraphqlSchema,
       introspection: config.app.APP_ENV !== APP_ENUM.APP_ENV.PROD,
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer: http_server }),

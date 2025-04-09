@@ -9,11 +9,14 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "clean:dependency": "rm -rf node_modules package-lock.json",
+    "start:prod": "node --env-file=./.env ./dist/src/main.cjs",
     "start:dev": "tsx watch --include './src/**/*.{ts,js}' --env-file=./.env ./src/main.ts",
     "format": "biome format --write ./src",
     "lint": "biome lint --write ./src && biome check --write ./src",
     "type-check": "tsc --noEmit",
-    "pre-commit": "npm run format && npm run lint && npm run type-check"
+    "pre-commit": "npm run format && npm run lint && npm run type-check",
+    "build:pkgroll": "npm run clean && pkgroll",
+    "build:esbuild": "npm run clean && node esbuild.config.js && cp ./node_modules/.prisma/client/*.node ./dist/"
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",
@@ -42,8 +45,19 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.14",
     "@types/nodemailer": "^6.4.17",
+    "esbuild": "^0.25.2",
+    "pkgroll": "^2.12.1",
     "prisma": "^6.5.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
+  },
+  "main": "./dist/main.mjs",
+  "module": "./dist/main.mjs",
+  "types": "./dist/main.d.mts",
+  "exports": {
+    "import": {
+      "types": "./dist/main.d.mts",
+      "default": "./dist/main.mjs"
+    }
   }
 }
