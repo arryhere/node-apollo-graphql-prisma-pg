@@ -41,9 +41,9 @@ export const config = {
   },
 
   tokenExpiration: {
-    JWT_ACCESS_TOKEN_EXPIRATION: env.get('JWT_ACCESS_TOKEN_EXPIRATION').required().asIntPositive(),
-    JWT_REFRESH_TOKEN_EXPIRATION: env.get('JWT_REFRESH_TOKEN_EXPIRATION').required().asIntPositive(),
-    JWT_VERIFY_TOKEN_EXPIRATION: env.get('JWT_VERIFY_TOKEN_EXPIRATION').required().asIntPositive(),
-    JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION: env.get('JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION').required().asIntPositive(),
+    ACCESS_TOKEN_EXPIRATION: env.get('ACCESS_TOKEN_EXPIRATION').required().asIntPositive(),
+    REFRESH_TOKEN_EXPIRATION: env.get('REFRESH_TOKEN_EXPIRATION').required().asIntPositive(),
+    VERIFY_TOKEN_EXPIRATION: env.get('VERIFY_TOKEN_EXPIRATION').required().asIntPositive(),
+    FORGOT_PASSWORD_TOKEN_EXPIRATION: env.get('FORGOT_PASSWORD_TOKEN_EXPIRATION').required().asIntPositive(),
   },
 };
