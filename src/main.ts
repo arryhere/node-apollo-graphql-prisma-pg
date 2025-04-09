@@ -4,7 +4,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
-import express, { type NextFunction, type Request, type Response } from 'express';
+import express, { Router, type NextFunction, type Request, type Response } from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import { APP_ENUM } from './common/enum/appEnum.js';
 import { config } from './config/config.js';
@@ -37,18 +37,22 @@ async function main() {
 
     /* api */
     app.get('/', (req: Request, res: Response, next: NextFunction) => res.status(200).send('root'));
-    app.use('/rest', restRouter);
-    app.use(
+
+    const apiRouterV1 = Router();
+    apiRouterV1.use('/rest', restRouter);
+    apiRouterV1.use(
       '/graphql',
       expressMiddleware(apolloServer, { context: async ({ req }) => ({ req: req, api: 'graphql' }) })
     );
+    app.use('/api/v1', apiRouterV1);
+
     app.use((req: Request, res: Response, next: NextFunction) => res.status(404).send('Page Not Found'));
 
     /* start */
     await new Promise<void>((resolve) => http_server.listen({ port: port }, resolve));
 
-    console.log(`[rest]: http://localhost:${port}/rest/`);
-    console.log(`[graphql]: http://localhost:${port}/graphql/`);
+    console.log(`[rest]: http://localhost:${port}/api/v1/rest/`);
+    console.log(`[graphql]: http://localhost:${port}/api/v1/graphql/`);
   } catch (error) {
     console.log('[Error]:', error);
   }
